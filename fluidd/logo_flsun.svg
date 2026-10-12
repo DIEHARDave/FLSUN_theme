@@ -1,6 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="177" height="56" viewBox="0 0 475 150">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="56" height="56" viewBox="-30 -192.5 535 535">
   <!-- Fluidd inlines this file into the page, so the link is relative to
        Fluidd's page, not to this file: it's the Mainsail theme's logo, served
-       by Moonraker. -->
+       by Moonraker. Fluidd's logo spot is square, so the wide logo sits in
+       the middle of a square. -->
   <image width="475" height="150" href="server/files/config/.theme/sidebar-logo.png" xlink:href="server/files/config/.theme/sidebar-logo.png"/>
 </svg>
