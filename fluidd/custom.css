@@ -1,0 +1,17 @@
+/* FLSUN theme for Fluidd, from FLSUN_theme. Fluidd loads this file from
+   config/.fluidd-theme; the images are the Mainsail theme's, in config/.theme
+   (links here are relative to this file's Moonraker URL). Don't edit it: an
+   update would refuse to overwrite it. */
+
+.v-main {
+  background-image: url("../.theme/main-background.png");
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.v-navigation-drawer {
+  background-image: url("../.theme/sidebar-background.png");
+  background-size: cover;
+  background-position: center bottom;
+}

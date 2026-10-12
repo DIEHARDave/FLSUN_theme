@@ -3,17 +3,17 @@
 # Run as the pi user from the cloned repo: ~/FLSUN_theme/install.sh
 # Safe to re-run, e.g. after a FLSun firmware update.
 #
-# Mainsail loads its theme from config/.theme. That folder becomes a link to
-# this repo's theme/, so updates arrive through the update manager. Whatever
-# was in .theme before is moved to ~/printer_data/flsun_theme_backup and put
-# back by uninstall.sh.
+# Mainsail loads its theme from config/.theme and Fluidd from
+# config/.fluidd-theme. Those folders become links to this repo's theme/ and
+# fluidd/, so updates arrive through the update manager. Whatever was in them
+# before is moved to ~/printer_data/flsun_theme_backup and put back by
+# uninstall.sh.
 
 set -e
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="${HOME}/printer_data/config"
 MOONRAKER_CONF="${CONFIG_DIR}/moonraker.conf"
-THEME_DIR="${CONFIG_DIR}/.theme"
 BACKUP_DIR="${HOME}/printer_data/flsun_theme_backup"
 
 msg() { printf '\033[1;32m==>\033[0m %s\n' "$*"; }
@@ -32,29 +32,39 @@ sudo install -m 644 "${REPO_DIR}/system/flsun-timesync.service" /etc/systemd/sys
 sudo systemctl daemon-reload
 sudo systemctl enable flsun-timesync.service > /dev/null 2>&1
 
-msg "Installing the Mainsail theme"
-if [ "$(readlink "$THEME_DIR")" = "${REPO_DIR}/theme" ]; then
-    echo "    already installed"
-else
-    if [ -e "$THEME_DIR" ] || [ -L "$THEME_DIR" ]; then
-        if [ -d "$BACKUP_DIR" ]; then
-            # An older backup is the theme from before the first install
-            # (a firmware update may have recreated .theme since); keep it as
-            # the one to restore and set this one aside with a date.
-            aside="${BACKUP_DIR}/.theme.$(date +%Y%m%d_%H%M%S)"
-            mv "$THEME_DIR" "$aside"
-            echo "    existing .theme moved to $aside"
-        else
-            mkdir -p "$BACKUP_DIR"
-            mv "$THEME_DIR" "${BACKUP_DIR}/.theme"
-            echo "    existing .theme backed up to ${BACKUP_DIR}/.theme"
-        fi
-    else
-        # An empty backup folder records that there was no theme to restore.
-        mkdir -p "$BACKUP_DIR"
+# Links config/$1 to the repo folder $2, first backing up what was there.
+install_theme_dir() {
+    local dir="${CONFIG_DIR}/$1" target="${REPO_DIR}/$2"
+    if [ "$(readlink "$dir")" = "$target" ]; then
+        echo "    $1 already installed"
+        return
     fi
-    ln -sfn "${REPO_DIR}/theme" "$THEME_DIR"
-fi
+    mkdir -p "$BACKUP_DIR"
+    if [ -e "$dir" ] || [ -L "$dir" ]; then
+        if [ -e "${BACKUP_DIR}/$1" ] || [ -L "${BACKUP_DIR}/$1" ]; then
+            # The older backup is the theme from before the first install (a
+            # firmware update may have recreated the folder since); keep it as
+            # the one to restore and set this one aside with a date.
+            local aside="${BACKUP_DIR}/$1.$(date +%Y%m%d_%H%M%S)"
+            mv "$dir" "$aside"
+            echo "    existing $1 moved to $aside"
+        else
+            mv "$dir" "${BACKUP_DIR}/$1"
+            echo "    existing $1 backed up to ${BACKUP_DIR}/$1"
+        fi
+    fi
+    # With nothing backed up, uninstall.sh just removes the link.
+    ln -sfn "$target" "$dir"
+}
+
+msg "Installing the Mainsail theme"
+install_theme_dir .theme theme
+
+msg "Installing the Fluidd theme"
+install_theme_dir .fluidd-theme fluidd
+# The preset in Settings > Theme. FLSUN_Updater's fluidd hook adds it again
+# after each Fluidd update, which replaces config.json.
+"${REPO_DIR}/fluidd_preset.py" add
 
 msg "Adding the update manager entry"
 ln -sfn "${REPO_DIR}/moonraker/flsun_theme.conf" "${CONFIG_DIR}/flsun_theme.conf"
@@ -66,4 +76,4 @@ fi
 msg "Restarting Moonraker"
 sudo systemctl restart moonraker
 
-msg "Done. Reload Mainsail in your browser (Ctrl+F5) to see the theme."
+msg "Done. Reload Mainsail or Fluidd in your browser (Ctrl+F5). In Fluidd, pick FLSUN in Settings > Theme."
