@@ -10,12 +10,12 @@ The FLSun theme for Mainsail and Fluidd on the **FLSun T1 Pro**, installed as a 
 
 Mainsail loads these from the hidden `.theme` folder in the config files and uses them straight away.
 
-Fluidd gets a theme called **FLSUN** that uses the same images: pick it in Fluidd's **Settings > Theme**. It shows the FLSun logo in the top bar, with the same page and sidebar backgrounds as Mainsail. The files are in `fluidd/`:
+Fluidd gets a theme called **FLSUN** that uses the same images: pick it in Fluidd's **Settings > Theme**. It shows the FLSun logo in the top left corner and, faintly, in the bottom right corner of the page (like Fluidd's other themes; turn that off with **Show logo in background**), over the same page background as Mainsail. The files are in `fluidd/`:
 
 | File | What it is |
 | :--- | :--- |
 | `fluidd/logo_flsun.svg` | The logo for the FLSUN preset; it shows `theme/sidebar-logo.png` |
-| `fluidd/custom.css` | Puts `theme/main-background.png` and `theme/sidebar-background.png` behind the page and the sidebar |
+| `fluidd/custom.css` | Puts `theme/main-background.png` behind the page and fits the wide logo into Fluidd's background logo spot |
 
 Fluidd lists its theme presets from `config.json` in its own folder (`~/fluidd`), and every Fluidd update replaces that file. With [FLSUN_Updater](https://github.com/DIEHARDave/FLSUN_Updater) managing Fluidd, the FLSUN preset is added back after each update. Otherwise, run `~/FLSUN_theme/fluidd_preset.py add` after updating Fluidd. The background images apply even without the preset.
 
