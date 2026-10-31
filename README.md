@@ -1,5 +1,7 @@
 # FLSUN_theme
 
+> **Parts:** the printers, boards, readers and other gear that go with this project are listed at [projects.die-hard.net/gear](https://projects.die-hard.net/gear) (Amazon affiliate links).
+
 The FLSun theme for Mainsail and Fluidd on the **FLSun T1 Pro**, installed as a plugin and kept up to date through Mainsail's and Fluidd's update manager.
 
 | File | What it is |
